@@ -73,6 +73,12 @@ openapi.json
 openapi.sdk.json
 python/README.md
 python/config.yml
+templates/documents-to-rag-vector-store/README.md
+templates/documents-to-rag-vector-store/ingest.py
+templates/folder-to-markdown-notes/README.md
+templates/folder-to-markdown-notes/workflow.json
+templates/large-scanned-pdfs-ocr-queue/README.md
+templates/large-scanned-pdfs-ocr-queue/convert_queue.py
 typescript/README.md
 typescript/openapi-ts.config.ts
 typescript/package.json

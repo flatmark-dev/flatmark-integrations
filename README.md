@@ -18,6 +18,16 @@ Official integrations for the [flatmark API](https://flatmark.dev), generated fr
 - **GitHub Action** — [`flatmark-dev/flatmark-action`](https://github.com/marketplace/actions/flatmark-api) on the GitHub Marketplace
 - **LangChain document loader (`FlatmarkLoader`)** — `pip install langchain-flatmark` · [PyPI](https://pypi.org/project/langchain-flatmark/)
 
+## Templates
+
+Ready-made automations on the API: the walkthrough on the site, the files in this repository.
+
+| Template | Platform | Walkthrough | Files |
+|---|---|---|---|
+| Documents to a RAG vector store | Code | [flatmark.dev/templates/documents-to-rag-vector-store](https://flatmark.dev/templates/documents-to-rag-vector-store) | [templates/documents-to-rag-vector-store](templates/documents-to-rag-vector-store) |
+| Large scanned PDFs through the OCR queue | Code | [flatmark.dev/templates/large-scanned-pdfs-ocr-queue](https://flatmark.dev/templates/large-scanned-pdfs-ocr-queue) | [templates/large-scanned-pdfs-ocr-queue](templates/large-scanned-pdfs-ocr-queue) |
+| Folder of PDFs to Markdown notes with n8n | n8n | [flatmark.dev/templates/folder-to-markdown-notes](https://flatmark.dev/templates/folder-to-markdown-notes) | [templates/folder-to-markdown-notes](templates/folder-to-markdown-notes) |
+
 ## Operations
 
 | Operation | Endpoint | What it does |

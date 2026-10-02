@@ -1,0 +1,111 @@
+{
+  "name": "Folder of PDFs to Markdown notes (flatmark)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4c2f7016-fdbc-40aa-af68-d86f4e5b0881",
+      "name": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "fileSelector": "/home/node/.n8n-files/pdf-inbox/*.pdf",
+        "options": {}
+      },
+      "id": "9d2a5e3d-4160-41f2-8635-5d8d0d6eb3e3",
+      "name": "Read PDFs",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "resource": "flatmark",
+        "operation": "submit_conversion_job",
+        "binaryPropertyName": "data",
+        "additionalFields": {}
+      },
+      "id": "f93673fd-bd27-4276-9123-8624fc16829a",
+      "name": "Convert with flatmark",
+      "type": "@flatmark-dev/n8n-nodes-flatmark.flatmark",
+      "typeVersion": 1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "data",
+        "binaryPropertyName": "data",
+        "options": {
+          "fileName": "={{ $('Read PDFs').item.json.fileName.replace(/\\.pdf$/i, '') }}.md"
+        }
+      },
+      "id": "73db1a2d-6e4f-411b-a34f-120ecfed91ff",
+      "name": "Markdown to file",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/.n8n-files/vault/{{ $binary.data.fileName }}",
+        "dataPropertyName": "data",
+        "options": {}
+      },
+      "id": "5041a338-6592-47fe-af38-989bb4cfd3d8",
+      "name": "Save note to vault",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Folder of PDFs to Markdown notes\nConverts every PDF in a folder to a Markdown note in your Obsidian vault (or any notes folder). Text, headings and tables come through as Markdown, and scanned pages are read with OCR.\n\n### Setup (self-hosted n8n)\n1. **Settings > Community nodes**: install `@flatmark-dev/n8n-nodes-flatmark`.\n2. [Get your API key](https://flatmark.dev/go/tpl-folder-to-markdown-notes?to=/app/api-keys) and add it as a **flatmark API** credential on the *Convert with flatmark* node.\n3. Mount your PDF folder at `/home/node/.n8n-files/pdf-inbox` and your vault folder at `/home/node/.n8n-files/vault`, or change both paths. n8n reads and writes files only under `N8N_RESTRICT_FILE_ACCESS_TO` (default `~/.n8n-files`).\n4. Click **Execute workflow**.",
+        "height": 420,
+        "width": 520,
+        "color": 7
+      },
+      "id": "69cf17af-9a48-47ce-8c42-821a85c3bce8",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-560, 120]
+    },
+    {
+      "parameters": {
+        "content": "### What the flatmark step does\nIt sends each PDF to the queue, waits for the job and returns the Markdown in `data`. Files run one after another.\n\n- Up to 25 MB and 200 pages per file.\n- 10 credits per file, refunded if the job fails.\n- Images are not extracted. Keep the PDF in your vault and embed it with `![[file.pdf]]` if you need the figures.\n\nEvery run converts every PDF in the folder, so move converted PDFs out before the next run.",
+        "height": 300,
+        "width": 460,
+        "color": 5
+      },
+      "id": "0e767fc5-8ba6-4e40-9308-72b35078f252",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [400, 460]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [[{ "node": "Read PDFs", "type": "main", "index": 0 }]]
+    },
+    "Read PDFs": {
+      "main": [[{ "node": "Convert with flatmark", "type": "main", "index": 0 }]]
+    },
+    "Convert with flatmark": {
+      "main": [[{ "node": "Markdown to file", "type": "main", "index": 0 }]]
+    },
+    "Markdown to file": {
+      "main": [[{ "node": "Save note to vault", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
