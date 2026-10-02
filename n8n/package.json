@@ -1,0 +1,54 @@
+{
+  "name": "@flatmark-dev/n8n-nodes-flatmark",
+  "version": "1.0.0",
+  "description": "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany.",
+  "license": "MIT",
+  "homepage": "https://flatmark.dev",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "flatmark"
+  ],
+  "author": {
+    "name": "podshalocef",
+    "email": "contact@podshalocef.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flatmark-dev/flatmark-integrations.git",
+    "directory": "n8n"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/FlatmarkApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Flatmark/Flatmark.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "0.50.4",
+    "eslint": "9.39.4",
+    "prettier": "3.8.3",
+    "release-it": "20.2.0",
+    "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "flatmark-zapier",
+  "version": "1.0.0",
+  "description": "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany.",
+  "homepage": "https://flatmark.dev",
+  "author": "podshalocef <contact@podshalocef.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "jest --testTimeout 60000"
+  },
+  "dependencies": {
+    "form-data": "4.0.6",
+    "zapier-platform-core": "19.1.0"
+  },
+  "devDependencies": {
+    "jest": "30.5.2",
+    "zapier-platform-cli": "19.1.0"
+  }
+}

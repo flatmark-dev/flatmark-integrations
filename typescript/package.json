@@ -1,0 +1,42 @@
+{
+  "name": "@flatmark-dev/sdk",
+  "version": "1.0.0",
+  "description": "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany.",
+  "keywords": [
+    "flatmark",
+    "sdk",
+    "api",
+    "openapi"
+  ],
+  "homepage": "https://flatmark.dev",
+  "license": "MIT",
+  "author": "podshalocef <contact@podshalocef.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flatmark-dev/flatmark-integrations.git",
+    "directory": "typescript"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "openapi-ts",
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.99.0",
+    "typescript": "5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

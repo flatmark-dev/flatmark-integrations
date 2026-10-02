@@ -1,0 +1,6 @@
+project_name_override: "flatmark"
+package_name_override: "flatmark"
+package_version_override: "1.0.0"
+content_type_overrides:
+  "application/pdf": "application/octet-stream"
+  "application/xml": "application/octet-stream"
