@@ -1,0 +1,32 @@
+identity:
+  author: "podshalocef"
+  name: "flatmark"
+  label:
+    en_US: "flatmark"
+  description:
+    en_US: "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany."
+  icon: "icon.svg"
+  tags:
+    - "productivity"
+    - "utilities"
+credentials_for_provider:
+  x_api_key:
+    type: "secret-input"
+    required: true
+    label:
+      en_US: "flatmark API key"
+    placeholder:
+      en_US: "Paste your flatmark API key"
+    help:
+      en_US: "Create an API key in your flatmark account"
+    url: "https://flatmark.dev/go/dify?to=/app/api-keys"
+tools:
+  - "tools/get_me.yaml"
+  - "tools/get_job.yaml"
+  - "tools/list_jobs.yaml"
+  - "tools/convert_document.yaml"
+  - "tools/submit_conversion_job.yaml"
+  - "tools/get_conversion_result.yaml"
+extra:
+  python:
+    source: "provider/flatmark.py"

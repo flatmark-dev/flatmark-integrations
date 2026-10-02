@@ -1,0 +1,17 @@
+{
+  "url": "/v1/convert",
+  "method": "POST",
+  "type": "multipart/form-data",
+  "body": {
+    "file": {
+      "value": "{{parameters.file_data}}",
+      "options": {
+        "filename": "{{parameters.file_name}}"
+      }
+    }
+  },
+  "response": {
+    "type": "json",
+    "output": "{{body}}"
+  }
+}

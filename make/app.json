@@ -1,0 +1,49 @@
+{
+  "name": "flatmark-n8qrcj",
+  "version": 1,
+  "label": "flatmark",
+  "description": "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany.",
+  "theme": "#770be8",
+  "connection": {
+    "label": "flatmark",
+    "type": "basic"
+  },
+  "modules": [
+    {
+      "name": "getMe",
+      "typeId": 4,
+      "label": "Your plan, remaining requests, and remaining credits",
+      "description": "Check where you stand before a call fails."
+    },
+    {
+      "name": "getJob",
+      "typeId": 4,
+      "label": "Get one queued job by ID",
+      "description": "Returns one of your jobs. An unknown ID, or a job owned by someone else, returns 404."
+    },
+    {
+      "name": "listJobs",
+      "typeId": 4,
+      "label": "List your queued jobs, newest first",
+      "description": "Lists your jobs, newest first. Pass `next_cursor` back as `cursor` to get the next page."
+    },
+    {
+      "name": "convertDocument",
+      "typeId": 4,
+      "label": "Convert a document to Markdown in one call",
+      "description": "Converts one document up to 8 MB and returns the Markdown in the response."
+    },
+    {
+      "name": "submitConversionJob",
+      "typeId": 4,
+      "label": "Queue a document for conversion with OCR and tables",
+      "description": "Queues one document up to 25 MB and 200 pages for conversion with Docling. Returns a job ID: get the output with “Download a queued job's Markdown or JSON” once “Get one queued job by ID” reports the job done."
+    },
+    {
+      "name": "getConversionResult",
+      "typeId": 4,
+      "label": "Download a queued job's Markdown or JSON",
+      "description": "Returns the output of one of your finished queued jobs. Takes the job ID from “Queue a document for conversion with OCR and tables”."
+    }
+  ]
+}

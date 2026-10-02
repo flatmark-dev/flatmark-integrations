@@ -1,0 +1,10 @@
+{
+  "id": "sample",
+  "kind": "sample",
+  "status": "sample",
+  "result": {},
+  "error": "sample",
+  "created_at": "sample",
+  "started_at": "sample",
+  "finished_at": "sample"
+}

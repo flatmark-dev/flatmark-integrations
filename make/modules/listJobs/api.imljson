@@ -1,0 +1,12 @@
+{
+  "url": "/v1/jobs",
+  "method": "GET",
+  "qs": {
+    "limit": "{{parameters.limit}}",
+    "cursor": "{{ifempty(parameters.cursor, undefined)}}"
+  },
+  "response": {
+    "type": "json",
+    "output": "{{body}}"
+  }
+}

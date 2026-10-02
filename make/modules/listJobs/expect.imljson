@@ -1,0 +1,17 @@
+[
+  {
+    "name": "limit",
+    "label": "Limit",
+    "required": false,
+    "type": "integer",
+    "help": "Items per page.",
+    "default": 50
+  },
+  {
+    "name": "cursor",
+    "label": "Cursor",
+    "required": false,
+    "type": "text",
+    "help": "The `next_cursor` from the previous page."
+  }
+]

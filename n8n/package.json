@@ -1,6 +1,6 @@
 {
   "name": "@flatmark-dev/n8n-nodes-flatmark",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany.",
   "license": "MIT",
   "homepage": "https://flatmark.dev",

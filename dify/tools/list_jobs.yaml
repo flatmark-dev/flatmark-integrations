@@ -1,0 +1,32 @@
+identity:
+  name: "list_jobs"
+  author: "podshalocef"
+  label:
+    en_US: "List jobs"
+description:
+  human:
+    en_US: "List your queued jobs, newest first."
+  llm: "List your queued jobs, newest first. Lists your jobs, newest first. Pass `next_cursor` back as `cursor` to get the next page."
+parameters:
+  - name: "limit"
+    type: "number"
+    required: false
+    label:
+      en_US: "Limit"
+    human_description:
+      en_US: "Items per page."
+    llm_description: "Items per page."
+    form: "llm"
+    default: 50
+  - name: "cursor"
+    type: "string"
+    required: false
+    label:
+      en_US: "Cursor"
+    human_description:
+      en_US: "The `next_cursor` from the previous page."
+    llm_description: "The `next_cursor` from the previous page."
+    form: "llm"
+extra:
+  python:
+    source: "tools/list_jobs.py"

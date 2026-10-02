@@ -1,0 +1,13 @@
+[
+  {
+    "label": "flatmark",
+    "modules": [
+      "getMe",
+      "getJob",
+      "listJobs",
+      "convertDocument",
+      "submitConversionJob",
+      "getConversionResult"
+    ]
+  }
+]

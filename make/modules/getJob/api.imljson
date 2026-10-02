@@ -1,0 +1,8 @@
+{
+  "url": "/v1/jobs/{{parameters.job_id}}",
+  "method": "GET",
+  "response": {
+    "type": "json",
+    "output": "{{body}}"
+  }
+}

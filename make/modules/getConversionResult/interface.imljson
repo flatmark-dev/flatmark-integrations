@@ -1,0 +1,12 @@
+[
+  {
+    "name": "text",
+    "type": "text",
+    "label": "Text"
+  },
+  {
+    "name": "content_type",
+    "type": "text",
+    "label": "Content type"
+  }
+]

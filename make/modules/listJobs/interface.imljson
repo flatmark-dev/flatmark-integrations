@@ -1,0 +1,54 @@
+[
+  {
+    "name": "items",
+    "type": "array",
+    "label": "Items",
+    "spec": [
+      {
+        "name": "id",
+        "type": "text",
+        "label": "Id"
+      },
+      {
+        "name": "kind",
+        "type": "text",
+        "label": "Kind"
+      },
+      {
+        "name": "status",
+        "type": "text",
+        "label": "Status"
+      },
+      {
+        "name": "result",
+        "type": "collection",
+        "label": "Result"
+      },
+      {
+        "name": "error",
+        "type": "text",
+        "label": "Error"
+      },
+      {
+        "name": "created_at",
+        "type": "text",
+        "label": "Created At"
+      },
+      {
+        "name": "started_at",
+        "type": "text",
+        "label": "Started At"
+      },
+      {
+        "name": "finished_at",
+        "type": "text",
+        "label": "Finished At"
+      }
+    ]
+  },
+  {
+    "name": "next_cursor",
+    "type": "text",
+    "label": "Next Cursor"
+  }
+]

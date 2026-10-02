@@ -1,0 +1,18 @@
+{
+  "url": "/v1/convert/jobs",
+  "method": "POST",
+  "type": "multipart/form-data",
+  "body": {
+    "file": {
+      "value": "{{parameters.file_data}}",
+      "options": {
+        "filename": "{{parameters.file_name}}"
+      }
+    },
+    "webhook_url": "{{ifempty(parameters.webhook_url, undefined)}}"
+  },
+  "response": {
+    "type": "json",
+    "output": "{{body}}"
+  }
+}

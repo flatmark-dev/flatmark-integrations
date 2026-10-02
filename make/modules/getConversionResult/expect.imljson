@@ -1,0 +1,26 @@
+[
+  {
+    "name": "job_id",
+    "label": "Job id",
+    "required": true,
+    "type": "text"
+  },
+  {
+    "name": "format",
+    "label": "Format",
+    "required": false,
+    "type": "select",
+    "options": [
+      {
+        "label": "markdown",
+        "value": "markdown"
+      },
+      {
+        "label": "json",
+        "value": "json"
+      }
+    ],
+    "help": "`markdown` (default) or `json` for the DoclingDocument structure file.",
+    "default": "markdown"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "url": "/v1/convert/jobs/{{parameters.job_id}}/result",
+  "method": "GET",
+  "qs": {
+    "format": "{{ifempty(parameters.format, undefined)}}"
+  },
+  "response": {
+    "type": {
+      "*": "text",
+      "400-599": "json"
+    },
+    "output": {
+      "text": "{{body}}",
+      "content_type": "{{headers.`content-type`}}"
+    }
+  }
+}

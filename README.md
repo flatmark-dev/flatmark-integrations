@@ -12,7 +12,10 @@ Official integrations for the [flatmark API](https://flatmark.dev), generated fr
 
 ## Integrations
 
-The first packages are on their way.
+- **n8n** — community node [`@flatmark-dev/n8n-nodes-flatmark`](https://www.npmjs.com/package/@flatmark-dev/n8n-nodes-flatmark), install it under Settings → Community Nodes
+- **Python SDK** — `pip install flatmark` · [PyPI](https://pypi.org/project/flatmark/)
+- **TypeScript SDK** — `npm install @flatmark-dev/sdk` · [npm](https://www.npmjs.com/package/@flatmark-dev/sdk)
+- **GitHub Action** — [`flatmark-dev/flatmark-action`](https://github.com/marketplace/actions/flatmark-api) on the GitHub Marketplace
 
 ## Operations
 

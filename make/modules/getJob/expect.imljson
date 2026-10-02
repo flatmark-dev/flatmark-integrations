@@ -1,0 +1,9 @@
+[
+  {
+    "name": "job_id",
+    "label": "Job id",
+    "required": true,
+    "type": "text",
+    "help": "The `job_id` from the submit response."
+  }
+]

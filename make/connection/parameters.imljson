@@ -1,0 +1,10 @@
+[
+  {
+    "name": "apiKey",
+    "type": "password",
+    "label": "API key",
+    "required": true,
+    "editable": true,
+    "help": "Create a key at [flatmark.dev](https://flatmark.dev/go/make?to=/app/api-keys)."
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "url": "https://api.flatmark.dev/v1/me",
+  "method": "GET",
+  "headers": {
+    "X-API-Key": "{{parameters.apiKey}}"
+  },
+  "response": {
+    "type": "json",
+    "valid": {
+      "condition": "{{body.is_keyed}}",
+      "message": "The API key was not accepted. Create one at https://flatmark.dev/go/make?to=/app/api-keys"
+    },
+    "metadata": {
+      "type": "text",
+      "value": "{{body.tier}}"
+    },
+    "error": {
+      "message": "[{{statusCode}}] {{ifempty(body.detail, body.title)}}"
+    }
+  },
+  "log": {
+    "sanitize": [
+      "request.headers.`X-API-Key`"
+    ]
+  }
+}

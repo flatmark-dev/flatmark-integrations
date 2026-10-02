@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "langchain-flatmark"
+version = "1.0.1"
+description = "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "podshalocef", email = "contact@podshalocef.com" }]
+keywords = ["langchain", "document-loader", "markdown", "flatmark"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["langchain-core>=1.6,<2", "httpx>=0.28,<1"]
+
+[project.urls]
+Homepage = "https://flatmark.dev"
+Documentation = "https://github.com/flatmark-dev/flatmark-integrations/blob/main/langchain/README.md"
+Repository = "https://github.com/flatmark-dev/flatmark-integrations"
+Issues = "https://github.com/flatmark-dev/flatmark-integrations/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["langchain_flatmark"]

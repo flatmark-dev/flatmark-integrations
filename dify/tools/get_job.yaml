@@ -1,0 +1,22 @@
+identity:
+  name: "get_job"
+  author: "podshalocef"
+  label:
+    en_US: "Get job"
+description:
+  human:
+    en_US: "Get one queued job by ID."
+  llm: "Get one queued job by ID. Returns one of your jobs. An unknown ID, or a job owned by someone else, returns 404."
+parameters:
+  - name: "job_id"
+    type: "string"
+    required: true
+    label:
+      en_US: "Job ID"
+    human_description:
+      en_US: "The `job_id` from the submit response."
+    llm_description: "The `job_id` from the submit response."
+    form: "llm"
+extra:
+  python:
+    source: "tools/get_job.py"

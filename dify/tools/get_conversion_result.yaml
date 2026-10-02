@@ -1,0 +1,39 @@
+identity:
+  name: "get_conversion_result"
+  author: "podshalocef"
+  label:
+    en_US: "Get conversion result"
+description:
+  human:
+    en_US: "Download a queued job's Markdown or JSON."
+  llm: "Download a queued job's Markdown or JSON. Returns the output of one of your finished queued jobs."
+parameters:
+  - name: "job_id"
+    type: "string"
+    required: true
+    label:
+      en_US: "Job ID"
+    human_description:
+      en_US: "Job ID"
+    llm_description: "Job ID"
+    form: "llm"
+  - name: "format"
+    type: "select"
+    required: false
+    label:
+      en_US: "Format"
+    human_description:
+      en_US: "`markdown` (default) or `json` for the DoclingDocument structure file."
+    llm_description: "`markdown` (default) or `json` for the DoclingDocument structure file."
+    form: "llm"
+    options:
+      - value: "markdown"
+        label:
+          en_US: "markdown"
+      - value: "json"
+        label:
+          en_US: "json"
+    default: "markdown"
+extra:
+  python:
+    source: "tools/get_conversion_result.py"

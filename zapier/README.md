@@ -4,7 +4,7 @@ Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTM
 
 flatmark converts PDF, Word, PowerPoint, Excel and HTML to Markdown over a REST API and an MCP server. Files up to 8 MB convert in one call with MarkItDown. Files up to 25 MB and 200 pages go through a queue that runs Docling with OCR and table detection. The queue returns Markdown and a JSON structure file, by polling or a signed webhook. The servers are in Germany. The free plan has 100 credits a month and needs no card.
 
-The [flatmark](https://flatmark.dev) integration for Zapier, version 1.0.0,
+The [flatmark](https://flatmark.dev) integration for Zapier, version 1.0.1,
 generated from the API's [OpenAPI document](../openapi.json). Connect it with
 an API key: [create one](https://flatmark.dev/go/zapier?to=/app/api-keys).
 
@@ -25,7 +25,7 @@ npx zapier-platform validate --without-style
 API_KEY=... npm test   # live calls; without a key only the definitions are checked
 ```
 
-Not registered with Zapier yet (no `.zapierapprc`). Releases of this repository push the version to Zapier
+Linked to Zapier integration `247123` (`.zapierapprc`). Releases of this repository push the version to Zapier
 (`.github/workflows/publish.yml`).
 
 Support: https://flatmark.dev/support

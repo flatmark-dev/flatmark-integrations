@@ -1,0 +1,27 @@
+[
+  {
+    "name": "job_id",
+    "type": "text",
+    "label": "Job Id"
+  },
+  {
+    "name": "status",
+    "type": "text",
+    "label": "Status"
+  },
+  {
+    "name": "webhook_secret",
+    "type": "text",
+    "label": "Webhook Secret"
+  },
+  {
+    "name": "result_url",
+    "type": "text",
+    "label": "Result Url"
+  },
+  {
+    "name": "poll_url",
+    "type": "text",
+    "label": "Poll Url"
+  }
+]

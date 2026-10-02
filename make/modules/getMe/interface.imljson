@@ -1,0 +1,61 @@
+[
+  {
+    "name": "tier",
+    "type": "text",
+    "label": "Tier"
+  },
+  {
+    "name": "is_keyed",
+    "type": "boolean",
+    "label": "Is Keyed"
+  },
+  {
+    "name": "rate_limit",
+    "type": "collection",
+    "label": "RateLimitInfo",
+    "spec": [
+      {
+        "name": "limit",
+        "type": "number",
+        "label": "Limit"
+      },
+      {
+        "name": "remaining",
+        "type": "number",
+        "label": "Remaining"
+      },
+      {
+        "name": "reset",
+        "type": "number",
+        "label": "Reset"
+      }
+    ]
+  },
+  {
+    "name": "credits",
+    "type": "collection",
+    "label": "CreditsInfo",
+    "spec": [
+      {
+        "name": "balance",
+        "type": "number",
+        "label": "Balance"
+      },
+      {
+        "name": "granted",
+        "type": "number",
+        "label": "Granted"
+      },
+      {
+        "name": "period_end",
+        "type": "text",
+        "label": "Period End"
+      }
+    ]
+  },
+  {
+    "name": "features",
+    "type": "array",
+    "label": "Features"
+  }
+]

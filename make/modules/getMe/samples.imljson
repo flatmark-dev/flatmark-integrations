@@ -1,0 +1,15 @@
+{
+  "tier": "sample",
+  "is_keyed": true,
+  "rate_limit": {
+    "limit": 1,
+    "remaining": 1,
+    "reset": 1
+  },
+  "credits": {
+    "balance": 1,
+    "granted": 1,
+    "period_end": "sample"
+  },
+  "features": []
+}

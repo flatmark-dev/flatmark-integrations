@@ -1,0 +1,13 @@
+identity:
+  name: "get_me"
+  author: "podshalocef"
+  label:
+    en_US: "Get me"
+description:
+  human:
+    en_US: "Your plan, remaining requests, and remaining credits."
+  llm: "Your plan, remaining requests, and remaining credits. Check where you stand before a call fails."
+parameters: []
+extra:
+  python:
+    source: "tools/get_me.py"

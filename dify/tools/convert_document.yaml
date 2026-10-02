@@ -1,0 +1,22 @@
+identity:
+  name: "convert_document"
+  author: "podshalocef"
+  label:
+    en_US: "Convert document"
+description:
+  human:
+    en_US: "Convert a document to Markdown in one call."
+  llm: "Convert a document to Markdown in one call. Converts one document up to 8 MB and returns the Markdown in the response."
+parameters:
+  - name: "file"
+    type: "file"
+    required: true
+    label:
+      en_US: "File"
+    human_description:
+      en_US: "The document, sent as multipart form data with its Content-Type."
+    llm_description: "The document, sent as multipart form data with its Content-Type."
+    form: "llm"
+extra:
+  python:
+    source: "tools/convert_document.py"

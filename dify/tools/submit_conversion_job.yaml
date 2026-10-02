@@ -1,0 +1,31 @@
+identity:
+  name: "submit_conversion_job"
+  author: "podshalocef"
+  label:
+    en_US: "Submit conversion job"
+description:
+  human:
+    en_US: "Queue a document for conversion with OCR and tables. It queues a job and returns its id: poll it with the get_job tool, then fetch the output with get_conversion_result."
+  llm: "Queue a document for conversion with OCR and tables. Queues one document up to 25 MB and 200 pages for conversion with Docling. It queues a job and returns its id: poll it with the get_job tool, then fetch the output with get_conversion_result."
+parameters:
+  - name: "file"
+    type: "file"
+    required: true
+    label:
+      en_US: "File"
+    human_description:
+      en_US: "The document, sent as multipart form data with its Content-Type."
+    llm_description: "The document, sent as multipart form data with its Content-Type."
+    form: "llm"
+  - name: "webhook_url"
+    type: "string"
+    required: false
+    label:
+      en_US: "Webhook URL"
+    human_description:
+      en_US: "Optional. A public http or https URL that receives a POST when the job finishes."
+    llm_description: "Optional. A public http or https URL that receives a POST when the job finishes."
+    form: "llm"
+extra:
+  python:
+    source: "tools/submit_conversion_job.py"
