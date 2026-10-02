@@ -20,10 +20,13 @@ jobs:
           python-version: "3.12"
       # The Marketplace's install check (langgenius/dify-plugins pre-check): the
       # plugin loads every tool YAML and class, then serves. `dify plugin
-      # package` only reads the manifest, so this is the real validation.
+      # package` only reads the manifest, so this is the real validation. It runs
+      # in the folder that is packaged next, so it must write no bytecode: the
+      # Marketplace refuses a package carrying `__pycache__/`.
       - name: Load the plugin
         working-directory: dify
         env:
+          PYTHONDONTWRITEBYTECODE: "1"
           INSTALL_METHOD: serverless
           SERVERLESS_HOST: 127.0.0.1
           SERVERLESS_PORT: "8080"
@@ -42,12 +45,16 @@ jobs:
         run: |
           curl -fsSL -o "$RUNNER_TEMP/dify" "https://github.com/langgenius/dify-plugin-daemon/releases/download/0.6.10/dify-plugin-linux-amd64"
           chmod +x "$RUNNER_TEMP/dify"
-          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.1.difypkg
+          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.2.difypkg
+          if unzip -Z1 flatmark-1.0.2.difypkg | grep -E '(^|/)__pycache__/|\.pyc$'; then
+            echo "::error::flatmark-1.0.2.difypkg carries Python bytecode, which the Marketplace refuses"
+            exit 1
+          fi
       - name: Attach to the release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
-        run: gh release upload "$TAG" flatmark-1.0.1.difypkg --clobber --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$TAG" flatmark-1.0.2.difypkg --clobber --repo "$GITHUB_REPOSITORY"
   langchain:
     runs-on: ubuntu-latest
     permissions:
@@ -100,8 +107,8 @@ jobs:
       - run: npm run release
       - name: Scan the published package
         run: |
-          for _ in $(seq 30); do npm view "@flatmark-dev/n8n-nodes-flatmark@1.0.1" version && break; sleep 10; done
-          out=$(npx --yes @n8n/scan-community-package@0.38.0 "@flatmark-dev/n8n-nodes-flatmark@1.0.1")
+          for _ in $(seq 30); do npm view "@flatmark-dev/n8n-nodes-flatmark@1.0.2" version && break; sleep 10; done
+          out=$(npx --yes @n8n/scan-community-package@0.38.0 "@flatmark-dev/n8n-nodes-flatmark@1.0.2")
           echo "$out"
           grep -q "has passed all security checks" <<<"$out"
   npm-sdk:
@@ -155,7 +162,7 @@ jobs:
         working-directory: zapier
     env:
       ZAPIER_DEPLOY_KEY: ${{ secrets.ZAPIER_DEPLOY_KEY }}
-      VERSION: "1.0.1"
+      VERSION: "1.0.2"
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.0.0

@@ -10,7 +10,7 @@ import httpx
 BASE_URL = 'https://api.flatmark.dev'
 AUTH_HEADER = 'X-API-Key'
 CREDENTIAL = 'x_api_key'
-USER_AGENT = 'flatmark-dify/1.0.1'
+USER_AGENT = 'flatmark-dify/1.0.2'
 TIMEOUT = 240
 TITLE = 'flatmark'
 

@@ -2,7 +2,7 @@
 
 Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany.
 
-The [flatmark](https://flatmark.dev) custom app for Make, version 1.0.1,
+The [flatmark](https://flatmark.dev) custom app for Make, version 1.0.2,
 generated from the API's [OpenAPI document](../openapi.json). Connect it with
 an API key: [create one](https://flatmark.dev/go/make?to=/app/api-keys).
 
