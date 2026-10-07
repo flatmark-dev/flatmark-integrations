@@ -1,6 +1,6 @@
 {
   "name": "@flatmark-dev/sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Document to Markdown API and MCP server for PDF, Word, PowerPoint, Excel and HTML. OCR queue for large files. Hosted in Germany.",
   "keywords": [
     "flatmark",
