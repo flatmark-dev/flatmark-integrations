@@ -13,6 +13,7 @@ Official integrations for the [flatmark API](https://flatmark.dev), generated fr
 ## Integrations
 
 - **n8n** — community node [`@flatmark-dev/n8n-nodes-flatmark`](https://www.npmjs.com/package/@flatmark-dev/n8n-nodes-flatmark), install it under Settings → Community Nodes
+- **Dify** — [`podshalocef/flatmark`](https://marketplace.dify.ai/plugin/podshalocef/flatmark) on the Dify Marketplace
 - **Python SDK** — `pip install flatmark` · [PyPI](https://pypi.org/project/flatmark/)
 - **TypeScript SDK** — `npm install @flatmark-dev/sdk` · [npm](https://www.npmjs.com/package/@flatmark-dev/sdk)
 - **GitHub Action** — [`flatmark-dev/flatmark-action`](https://github.com/marketplace/actions/flatmark-api) on the GitHub Marketplace
