@@ -201,6 +201,309 @@
         }
       }
     },
+    "/v1/webhooks": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "List your webhook endpoints",
+        "description": "Lists your webhook endpoints, oldest first. There are at most 10, so\n`next_cursor` is always null.\n\n**Credits:** free. This endpoint is not metered.",
+        "operationId": "list_webhook_endpoints",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookEndpointResponsePage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key (`unauthorized`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests (`rate_limited`). Wait for the number of seconds in `Retry-After`.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-connector": {
+          "kind": "hidden"
+        },
+        "x-credits-cost": 0
+      },
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Create a webhook endpoint",
+        "description": "Subscribes a URL to events. The response carries the signing secret,\nthe only time it is shown. Every delivery is a POST signed per Standard\nWebhooks (`webhook-id`, `webhook-timestamp`, `webhook-signature`).\n\n**Credits:** free. This endpoint is not metered.",
+        "operationId": "create_webhook_endpoint",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEndpointRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookEndpointCreated"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key (`unauthorized`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests (`rate_limited`). Wait for the number of seconds in `Retry-After`.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "You already have 10 endpoints (`endpoint_limit`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The URL is not public https (`invalid_url`), an event type is unknown (`unknown_event_type`), or the body is invalid (`validation_error`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "x-connector": {
+          "kind": "hidden"
+        },
+        "x-credits-cost": 0
+      }
+    },
+    "/v1/webhooks/{endpoint_id}": {
+      "delete": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Delete a webhook endpoint",
+        "description": "Deletes an endpoint and its delivery history. Pending deliveries are\nnot sent.\n\n**Credits:** free. This endpoint is not metered.",
+        "operationId": "delete_webhook_endpoint",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "endpoint_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The endpoint's `id`.",
+              "title": "Endpoint Id"
+            },
+            "description": "The endpoint's `id`."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "description": "No valid API key (`unauthorized`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests (`rate_limited`). Wait for the number of seconds in `Retry-After`.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No endpoint with this ID belongs to you (`not_found`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "x-connector": {
+          "kind": "hidden"
+        },
+        "x-credits-cost": 0
+      }
+    },
+    "/v1/webhooks/{endpoint_id}/test": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Send a test event to a webhook endpoint",
+        "description": "Queues a `webhook.test` event for this endpoint, whatever event types it\nsubscribes to. It is sent within seconds.\n\n**Credits:** free. This endpoint is not metered.",
+        "operationId": "send_webhook_test_event",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "endpoint_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The endpoint's `id`.",
+              "title": "Endpoint Id"
+            },
+            "description": "The endpoint's `id`."
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookTestQueued"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key (`unauthorized`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests (`rate_limited`). Wait for the number of seconds in `Retry-After`.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No endpoint with this ID belongs to you (`not_found`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The endpoint is disabled (`endpoint_disabled`).",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "x-connector": {
+          "kind": "hidden"
+        },
+        "x-credits-cost": 0
+      }
+    },
     "/v1/convert": {
       "post": {
         "tags": [
@@ -864,6 +1167,174 @@
         "title": "SyncConvertResponse",
         "description": "The result of a direct conversion."
       },
+      "WebhookEndpointCreated": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "event_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Event Types",
+            "description": "Empty means every event type."
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "description": "False once delivery failed 20 times in a row. Create the endpoint again."
+          },
+          "disabled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disabled At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "secret": {
+            "type": "string",
+            "title": "Secret",
+            "description": "The Standard Webhooks signing secret (`whsec_…`). Store it now: it is not shown again."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "event_types",
+          "description",
+          "enabled",
+          "created_at",
+          "secret"
+        ],
+        "title": "WebhookEndpointCreated",
+        "description": "The new endpoint, with its signing secret."
+      },
+      "WebhookEndpointRequest": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Url",
+            "description": "Where to send events. Must be `https://` on a public host."
+          },
+          "event_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Event Types",
+            "description": "The event types to receive. Empty receives every type."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Description",
+            "description": "A note for yourself.",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "WebhookEndpointRequest",
+        "description": "A new endpoint."
+      },
+      "WebhookEndpointResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "event_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Event Types",
+            "description": "Empty means every event type."
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "description": "False once delivery failed 20 times in a row. Create the endpoint again."
+          },
+          "disabled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disabled At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "event_types",
+          "description",
+          "enabled",
+          "created_at"
+        ],
+        "title": "WebhookEndpointResponse",
+        "description": "A webhook endpoint. The signing secret is returned only when it is created."
+      },
+      "WebhookTestQueued": {
+        "properties": {
+          "msg_id": {
+            "type": "string",
+            "title": "Msg Id",
+            "description": "The `webhook-id` header the test delivery carries."
+          }
+        },
+        "type": "object",
+        "required": [
+          "msg_id"
+        ],
+        "title": "WebhookTestQueued",
+        "description": "The queued test event."
+      },
       "Problem": {
         "description": "The RFC 9457 error body. Every error response uses it.",
         "properties": {
@@ -978,6 +1449,33 @@
           "items"
         ],
         "title": "JobResponsePage"
+      },
+      "WebhookEndpointResponsePage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/WebhookEndpointResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "WebhookEndpointResponsePage"
       }
     },
     "securitySchemes": {
@@ -995,6 +1493,10 @@
     {
       "name": "Jobs",
       "description": "Track work submitted to the queue. Poll one job by id, or list your recent jobs. The submitting call returns the job id and its poll URL. Polling and listing are free."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Get events POSTed to your own https endpoint, signed per [Standard Webhooks](https://www.standardwebhooks.com/): verify the `webhook-signature` header with the endpoint's secret, and use `webhook-id` to drop duplicates. A failed delivery is retried for a little over a day."
     },
     {
       "name": "Account",

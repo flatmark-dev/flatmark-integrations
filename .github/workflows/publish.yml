@@ -45,16 +45,16 @@ jobs:
         run: |
           curl -fsSL -o "$RUNNER_TEMP/dify" "https://github.com/langgenius/dify-plugin-daemon/releases/download/0.6.11/dify-plugin-linux-amd64"
           chmod +x "$RUNNER_TEMP/dify"
-          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.6.difypkg
-          if unzip -Z1 flatmark-1.0.6.difypkg | grep -E '(^|/)__pycache__/|\.pyc$'; then
-            echo "::error::flatmark-1.0.6.difypkg carries Python bytecode, which the Marketplace refuses"
+          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.7.difypkg
+          if unzip -Z1 flatmark-1.0.7.difypkg | grep -E '(^|/)__pycache__/|\.pyc$'; then
+            echo "::error::flatmark-1.0.7.difypkg carries Python bytecode, which the Marketplace refuses"
             exit 1
           fi
       - name: Attach to the release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
-        run: gh release upload "$TAG" flatmark-1.0.6.difypkg --clobber --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$TAG" flatmark-1.0.7.difypkg --clobber --repo "$GITHUB_REPOSITORY"
   langchain:
     runs-on: ubuntu-latest
     permissions:
@@ -107,8 +107,8 @@ jobs:
       - run: npm run release
       - name: Scan the published package
         run: |
-          for _ in $(seq 30); do npm view "@flatmark-dev/n8n-nodes-flatmark@1.0.6" version && break; sleep 10; done
-          out=$(npx --yes @n8n/scan-community-package@0.38.0 "@flatmark-dev/n8n-nodes-flatmark@1.0.6")
+          for _ in $(seq 30); do npm view "@flatmark-dev/n8n-nodes-flatmark@1.0.7" version && break; sleep 10; done
+          out=$(npx --yes @n8n/scan-community-package@0.38.0 "@flatmark-dev/n8n-nodes-flatmark@1.0.7")
           echo "$out"
           grep -q "has passed all security checks" <<<"$out"
   npm-sdk:
@@ -162,7 +162,7 @@ jobs:
         working-directory: zapier
     env:
       ZAPIER_DEPLOY_KEY: ${{ secrets.ZAPIER_DEPLOY_KEY }}
-      VERSION: "1.0.6"
+      VERSION: "1.0.7"
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.1.0
