@@ -45,16 +45,16 @@ jobs:
         run: |
           curl -fsSL -o "$RUNNER_TEMP/dify" "https://github.com/langgenius/dify-plugin-daemon/releases/download/0.6.14/dify-plugin-linux-amd64"
           chmod +x "$RUNNER_TEMP/dify"
-          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.15.difypkg
-          if unzip -Z1 flatmark-1.0.15.difypkg | grep -E '(^|/)__pycache__/|\.pyc$'; then
-            echo "::error::flatmark-1.0.15.difypkg carries Python bytecode, which the Marketplace refuses"
+          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.16.difypkg
+          if unzip -Z1 flatmark-1.0.16.difypkg | grep -E '(^|/)__pycache__/|\.pyc$'; then
+            echo "::error::flatmark-1.0.16.difypkg carries Python bytecode, which the Marketplace refuses"
             exit 1
           fi
       - name: Attach to the release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
-        run: gh release upload "$TAG" flatmark-1.0.15.difypkg --clobber --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$TAG" flatmark-1.0.16.difypkg --clobber --repo "$GITHUB_REPOSITORY"
   langchain:
     runs-on: ubuntu-latest
     permissions:
@@ -74,64 +74,6 @@ jobs:
         with:
           packages-dir: dist/langchain/
           skip-existing: true
-  make:
-    runs-on: ubuntu-latest
-    env:
-      MAKE_API_KEY: ${{ secrets.MAKE_API_KEY }}
-      MAKE_ZONE: ${{ secrets.MAKE_ZONE }}
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: "24"
-      - run: npm install -g @makehq/cli@1.4.0
-      - run: bash make/deploy.sh
-  n8n:
-    name: n8n community node
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    defaults:
-      run:
-        working-directory: n8n
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: "24"
-          registry-url: https://registry.npmjs.org
-      - run: npm install -g npm@11.21.1
-      - run: npm install
-      # n8n-node release in Actions: lint, build, npm publish with provenance.
-      - run: npm run release
-      - name: Scan the published package
-        run: |
-          for _ in $(seq 30); do npm view "@flatmark-dev/n8n-nodes-flatmark@1.0.15" version && break; sleep 10; done
-          out=$(npx --yes @n8n/scan-community-package@0.41.1 "@flatmark-dev/n8n-nodes-flatmark@1.0.15")
-          echo "$out"
-          grep -q "has passed all security checks" <<<"$out"
-  npm-sdk:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    defaults:
-      run:
-        working-directory: typescript
-    steps:
-      - uses: actions/checkout@v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: "24"
-          registry-url: https://registry.npmjs.org
-      - run: npm install --global npm@11.21.1
-      - run: npm install --no-audit --no-fund
-      - run: npm run generate
-      - run: npm run build
-      - run: npm publish --access public
   pypi-sdk:
     runs-on: ubuntu-latest
     permissions:
@@ -155,36 +97,3 @@ jobs:
         with:
           packages-dir: dist/python/
           skip-existing: true
-  zapier:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: zapier
-    env:
-      ZAPIER_DEPLOY_KEY: ${{ secrets.ZAPIER_DEPLOY_KEY }}
-      VERSION: "1.0.15"
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: "24"
-      - run: npm install
-      - run: npx zapier-platform validate --without-style && npx zapier-platform push
-      - name: Promote and migrate
-        # The first promotion is the operator's public-listing request; after it,
-        # each release is promoted and the previous version's users move over
-        # (same major only: a new major is a breaking change).
-        run: |
-          set -o pipefail
-          prev=$(npx zapier-platform versions --format json | jq -r '.[] | select(.State == "promoted") | .Version')
-          if [ -z "$prev" ]; then
-            echo "No promoted version yet: $VERSION stays private until the first promotion."
-            exit 0
-          fi
-          if [ "$prev" = "$VERSION" ]; then
-            exit 0
-          fi
-          npx zapier-platform promote "$VERSION" --yes
-          if [ "${prev%%.*}" = "${VERSION%%.*}" ]; then
-            npx zapier-platform migrate "$prev" "$VERSION" --yes
-          fi

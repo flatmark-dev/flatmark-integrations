@@ -7,7 +7,10 @@
       "name": "When clicking ‘Execute workflow’",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [0, 300]
+      "position": [
+        0,
+        300
+      ]
     },
     {
       "parameters": {
@@ -19,20 +22,174 @@
       "name": "Read PDFs",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
-      "position": [240, 300]
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "parameters": {
-        "resource": "flatmark",
-        "operation": "submit_conversion_job",
-        "binaryPropertyName": "data",
-        "additionalFields": {}
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "24b0c208-c75a-46cb-91ea-779470d4bd81",
+      "name": "One PDF at a time",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.flatmark.dev/v1/convert/jobs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
       },
       "id": "f93673fd-bd27-4276-9123-8624fc16829a",
-      "name": "Convert with flatmark",
-      "type": "@flatmark-dev/n8n-nodes-flatmark.flatmark",
-      "typeVersion": 1,
-      "position": [480, 300]
+      "name": "Queue the PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        720,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "7f8e4190-a925-4fbd-acfe-70b948ab3495",
+      "name": "Wait 5 seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        400
+      ],
+      "webhookId": "115f5345-c991-42cc-948c-659ca3f2838a"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.flatmark.dev/v1/jobs/{{ $('Queue the PDF').first().json.job_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "d1a73dff-f78a-4735-8b3e-ca54239fb813",
+      "name": "Check the job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "fefd38db-ca85-4619-978e-914e6a62c27a",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "succeeded",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "succeeded"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1de31475-f65d-4277-9845-19d28ac3f1b0",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "failed",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "failed"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "still running"
+        }
+      },
+      "id": "5d956baf-f264-465e-9eee-6053b486e8fd",
+      "name": "Job status",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.flatmark.dev/v1/convert/jobs/{{ $('Queue the PDF').first().json.job_id }}/result",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "2ce1862e-295b-4ea3-ad36-66b8597cf61e",
+      "name": "Download Markdown",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "parameters": {
@@ -40,14 +197,17 @@
         "sourceProperty": "data",
         "binaryPropertyName": "data",
         "options": {
-          "fileName": "={{ $('Read PDFs').item.json.fileName.replace(/\\.pdf$/i, '') }}.md"
+          "fileName": "={{ $('One PDF at a time').first().json.fileName.replace(/\\.pdf$/i, '') }}.md"
         }
       },
       "id": "73db1a2d-6e4f-411b-a34f-120ecfed91ff",
       "name": "Markdown to file",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
-      "position": [720, 300]
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "parameters": {
@@ -60,12 +220,15 @@
       "name": "Save note to vault",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
-      "position": [960, 300]
+      "position": [
+        2160,
+        300
+      ]
     },
     {
       "parameters": {
-        "content": "## Folder of PDFs to Markdown notes\nConverts every PDF in a folder to a Markdown note in your Obsidian vault (or any notes folder). Text, headings and tables come through as Markdown, and scanned pages are read with OCR.\n\n### Setup (self-hosted n8n)\n1. **Settings > Community nodes**: install `@flatmark-dev/n8n-nodes-flatmark`.\n2. [Get your API key](https://flatmark.dev/go/tpl-folder-to-markdown-notes?to=/app/api-keys) and add it as a **flatmark API** credential on the *Convert with flatmark* node.\n3. Mount your PDF folder at `/home/node/.n8n-files/pdf-inbox` and your vault folder at `/home/node/.n8n-files/vault`, or change both paths. n8n reads and writes files only under `N8N_RESTRICT_FILE_ACCESS_TO` (default `~/.n8n-files`).\n4. Click **Execute workflow**.",
-        "height": 420,
+        "content": "## Folder of PDFs to Markdown notes\nConverts every PDF in a folder to a Markdown note in your Obsidian vault (or any notes folder). Text, headings and tables come through as Markdown, and scanned pages are read with OCR.\n\n### Setup (self-hosted n8n)\nEvery node ships with n8n, so there is nothing to install.\n1. [Get your API key](https://flatmark.dev/go/tpl-folder-to-markdown-notes?to=/app/api-keys). In *Queue the PDF*, create a **Header Auth** credential with the name `X-API-Key` and your key as the value. Pick the same credential in *Check the job* and *Download Markdown*.\n2. Mount your PDF folder at `/home/node/.n8n-files/pdf-inbox` and your vault folder at `/home/node/.n8n-files/vault`, or change both paths. n8n reads and writes files only under `N8N_RESTRICT_FILE_ACCESS_TO` (default `~/.n8n-files`).\n3. Click **Execute workflow**.",
+        "height": 480,
         "width": 520,
         "color": 7
       },
@@ -73,35 +236,154 @@
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-560, 120]
+      "position": [
+        -560,
+        120
+      ]
     },
     {
       "parameters": {
-        "content": "### What the flatmark step does\nIt sends each PDF to the queue, waits for the job and returns the Markdown in `data`. Files run one after another.\n\n- Up to 25 MB and 200 pages per file.\n- 10 credits per file, refunded if the job fails.\n- Images are not extracted. Keep the PDF in your vault and embed it with `![[file.pdf]]` if you need the figures.\n\nEvery run converts every PDF in the folder, so move converted PDFs out before the next run.",
-        "height": 300,
-        "width": 460,
+        "content": "### How the queue steps work\n*One PDF at a time* hands on the PDFs one after another. *Queue the PDF* sends the file to the flatmark queue. *Check the job* asks for its status every 5 seconds, and *Download Markdown* fetches the result once the job has `succeeded`. A failed job is skipped, and the next PDF goes on.\n\n- Up to 25 MB and 200 pages per file.\n- 10 credits per file, refunded if the job fails. Status checks and downloads are free.\n- Images are not extracted. Keep the PDF in your vault and embed it with `![[file.pdf]]` if you need the figures.\n\nEvery run converts every PDF in the folder, so move converted PDFs out before the next run.",
+        "height": 360,
+        "width": 620,
         "color": 5
       },
       "id": "0e767fc5-8ba6-4e40-9308-72b35078f252",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [400, 460]
+      "position": [
+        700,
+        560
+      ]
     }
   ],
   "pinData": {},
   "connections": {
     "When clicking ‘Execute workflow’": {
-      "main": [[{ "node": "Read PDFs", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Read PDFs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Read PDFs": {
-      "main": [[{ "node": "Convert with flatmark", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "One PDF at a time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "Convert with flatmark": {
-      "main": [[{ "node": "Markdown to file", "type": "main", "index": 0 }]]
+    "One PDF at a time": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Queue the PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue the PDF": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 seconds": {
+      "main": [
+        [
+          {
+            "node": "Check the job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check the job": {
+      "main": [
+        [
+          {
+            "node": "Job status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job status": {
+      "main": [
+        [
+          {
+            "node": "Download Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "One PDF at a time",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 5 seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Markdown": {
+      "main": [
+        [
+          {
+            "node": "Markdown to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Markdown to file": {
-      "main": [[{ "node": "Save note to vault", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Save note to vault",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save note to vault": {
+      "main": [
+        [
+          {
+            "node": "One PDF at a time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,

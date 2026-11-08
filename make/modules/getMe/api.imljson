@@ -1,8 +1,0 @@
-{
-  "url": "/v1/me",
-  "method": "GET",
-  "response": {
-    "type": "json",
-    "output": "{{body}}"
-  }
-}
