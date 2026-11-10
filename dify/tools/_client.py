@@ -10,7 +10,8 @@ import httpx
 BASE_URL = 'https://api.flatmark.dev'
 AUTH_HEADER = 'X-API-Key'
 CREDENTIAL = 'x_api_key'
-USER_AGENT = 'flatmark-dify/1.0.16'
+KEY_URL = 'https://flatmark.dev/go/dify?to=/app/api-keys'
+USER_AGENT = 'flatmark-dify/1.0.17'
 TIMEOUT = 240
 TITLE = 'flatmark'
 
@@ -19,8 +20,16 @@ class ApiError(Exception):
     """The API answered with an error status."""
 
 
+def api_key(credentials):
+    """The API key the user set, or "" (the key is optional)."""
+    return ((credentials or {}).get(CREDENTIAL) or "").strip()
+
+
 def _headers(credentials):
-    return {AUTH_HEADER: credentials.get(CREDENTIAL, ""), "User-Agent": USER_AGENT}
+    key = api_key(credentials)
+    if not key:
+        return {"User-Agent": USER_AGENT}
+    return {AUTH_HEADER: key, "User-Agent": USER_AGENT}
 
 
 def get(credentials, path):
@@ -84,11 +93,28 @@ def request(credentials, operation, params):
     )
 
 
-def _error(response):
+def _error(response, keyed):
+    """The message of an error answer. A call without a key that the API
+    refused for want of one (a 401, or the 429 `daily_limit` once the free
+    daily allowance is spent) gets the one next step: where to get a key."""
     try:
-        detail = response.json().get("detail", response.text)
-    except (ValueError, AttributeError):
-        detail = response.text
+        body = response.json()
+    except ValueError:
+        body = None
+    body = body if isinstance(body, dict) else {}
+    if not keyed and body.get("code") == "daily_limit":
+        return (
+            "The free daily allowance for calls without an API key is used up. "
+            f"Get a free {TITLE} API key, no card needed, at {KEY_URL} and "
+            "add it in this plugin's authorization settings."
+        )
+    if not keyed and response.status_code == 401:
+        return (
+            f"This {TITLE} tool needs an API key. Get a free one, no card "
+            f"needed, at {KEY_URL} and add it in this plugin's authorization "
+            "settings."
+        )
+    detail = body.get("detail", response.text)
     if not isinstance(detail, str):
         detail = json.dumps(detail)
     return f"The {TITLE} API answered {response.status_code}: {detail[:1000]}"
@@ -104,9 +130,10 @@ def _filename(response, mime):
 def call(tool, operation, params):
     """Run the operation and yield its answer: JSON as a JSON message,
     text and XML as text, anything else as a file."""
-    response = request(tool.runtime.credentials, operation, params)
+    credentials = tool.runtime.credentials
+    response = request(credentials, operation, params)
     if response.status_code >= 400:
-        raise ApiError(_error(response))
+        raise ApiError(_error(response, bool(api_key(credentials))))
     mime = response.headers.get("content-type", "").split(";")[0].strip().lower()
     if mime == "application/json" or mime.endswith("+json"):
         answer = response.json()

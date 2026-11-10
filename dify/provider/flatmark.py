@@ -6,11 +6,13 @@ import httpx
 from dify_plugin import ToolProvider
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
-from tools._client import get
+from tools._client import api_key, get
 
 
 class FlatmarkProvider(ToolProvider):
     def _validate_credentials(self, credentials: dict[str, Any]) -> None:
+        if not api_key(credentials):
+            return  # no key: the tools use the free daily allowance
         try:
             response = get(credentials, '/v1/me')
         except httpx.HTTPError as err:
@@ -21,4 +23,11 @@ class FlatmarkProvider(ToolProvider):
             raise ToolProviderCredentialValidationError(msg)
         if response.status_code != 200:
             msg = f"The flatmark API answered {response.status_code}."
+            raise ToolProviderCredentialValidationError(msg)
+        # An unknown key is no error to the API: it answers as without a key.
+        if not response.json().get("is_keyed"):
+            msg = (
+                "The flatmark API does not know this API key. Check it, or "
+                "leave the field empty to use the free daily allowance."
+            )
             raise ToolProviderCredentialValidationError(msg)

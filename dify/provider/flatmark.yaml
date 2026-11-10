@@ -12,13 +12,13 @@ identity:
 credentials_for_provider:
   x_api_key:
     type: "secret-input"
-    required: true
+    required: false
     label:
-      en_US: "flatmark API key"
+      en_US: "flatmark API key (optional)"
     placeholder:
-      en_US: "Paste your flatmark API key"
+      en_US: "Leave empty to use the free daily allowance"
     help:
-      en_US: "Create an API key in your flatmark account"
+      en_US: "Get a free flatmark API key"
     url: "https://flatmark.dev/go/dify?to=/app/api-keys"
 tools:
   - "tools/get_me.yaml"

@@ -9,8 +9,9 @@ A Dify tool plugin for the [flatmark API](https://flatmark.dev).
 ## Setup
 
 1. Install **flatmark** from the Dify Marketplace (Plugins → Marketplace).
-2. [Create an API key](https://flatmark.dev/go/dify?to=/app/api-keys).
-3. Open the plugin's tool settings, choose **Authorize** and paste the key as the flatmark API key credential.
+2. Open the plugin's tool settings and choose **Authorize**. Leave the API key empty to try the tools on the free daily allowance, or paste a [free flatmark API key](https://flatmark.dev/go/dify?to=/app/api-keys) for your account's monthly credits.
+
+Without a key, every call from one network address shares the free daily allowance. On Dify Cloud the calls come from Dify's servers, so other users may draw on the same allowance. Once it is used up, the tool's error says where to get a key.
 
 ## Usage
 
@@ -27,7 +28,7 @@ Add the tools to a workflow, chatflow or agent. File inputs take a Dify file; JS
 
 ## Connection
 
-The plugin connects to `https://api.flatmark.dev` over HTTPS and sends the API key in the `X-API-Key` header; the Dify instance needs outbound network access to that endpoint. API reference: https://flatmark.dev/docs
+The plugin connects to `https://api.flatmark.dev` over HTTPS and sends your API key, when you set one, in the `X-API-Key` header; the Dify instance needs outbound network access to that endpoint. API reference: https://flatmark.dev/docs
 
 ## Source and support
 
