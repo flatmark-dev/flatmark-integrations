@@ -43,18 +43,18 @@ jobs:
           exit 1
       - name: Package
         run: |
-          curl -fsSL -o "$RUNNER_TEMP/dify" "https://github.com/langgenius/dify-plugin-daemon/releases/download/0.6.14/dify-plugin-linux-amd64"
+          curl -fsSL -o "$RUNNER_TEMP/dify" "https://github.com/langgenius/dify-plugin-daemon/releases/download/0.6.15/dify-plugin-linux-amd64"
           chmod +x "$RUNNER_TEMP/dify"
-          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.17.difypkg
-          if unzip -Z1 flatmark-1.0.17.difypkg | grep -E '(^|/)__pycache__/|\.pyc$'; then
-            echo "::error::flatmark-1.0.17.difypkg carries Python bytecode, which the Marketplace refuses"
+          "$RUNNER_TEMP/dify" plugin package dify -o flatmark-1.0.18.difypkg
+          if unzip -Z1 flatmark-1.0.18.difypkg | grep -E '(^|/)__pycache__/|\.pyc$'; then
+            echo "::error::flatmark-1.0.18.difypkg carries Python bytecode, which the Marketplace refuses"
             exit 1
           fi
       - name: Attach to the release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
-        run: gh release upload "$TAG" flatmark-1.0.17.difypkg --clobber --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$TAG" flatmark-1.0.18.difypkg --clobber --repo "$GITHUB_REPOSITORY"
   langchain:
     runs-on: ubuntu-latest
     permissions:

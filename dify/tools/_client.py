@@ -11,7 +11,7 @@ BASE_URL = 'https://api.flatmark.dev'
 AUTH_HEADER = 'X-API-Key'
 CREDENTIAL = 'x_api_key'
 KEY_URL = 'https://flatmark.dev/go/dify?to=/app/api-keys'
-USER_AGENT = 'flatmark-dify/1.0.17'
+USER_AGENT = 'flatmark-dify/1.0.18'
 TIMEOUT = 240
 TITLE = 'flatmark'
 
